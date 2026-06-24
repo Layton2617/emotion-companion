@@ -1,0 +1,28 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+}
+
+@layer base {
+  body {
+    @apply bg-sand-50 text-ink-800 antialiased;
+    /* 极轻的暖色径向渐变,模拟潮汐般的环境光,不抢内容。 */
+    background-image: radial-gradient(
+      120% 80% at 50% -10%,
+      theme("colors.sand.100") 0%,
+      theme("colors.sand.50") 55%
+    );
+    background-attachment: fixed;
+  }
+}
+
+@layer utilities {
+  /* 留白优先:内容列窄、行距松,降低阅读压迫感。 */
+  .prose-calm {
+    line-height: 1.85;
+    letter-spacing: 0.01em;
+  }
+}

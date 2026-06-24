@@ -1,0 +1,69 @@
+{
+  "name": "empathy",
+  "passed": true,
+  "metrics": {
+    "empathy_score": 0.6125
+  },
+  "thresholds": {},
+  "samples": [
+    {
+      "id": "e01",
+      "user": "我妈又拿我和别人家孩子比,我真的好累",
+      "emotion": "被否定",
+      "score": 0.8,
+      "rationale": "无反模式,命中 2 项共情特征"
+    },
+    {
+      "id": "e02",
+      "user": "异地恋三年了,感觉快撑不下去",
+      "emotion": "疲惫",
+      "score": 0.8,
+      "rationale": "无反模式,命中 2 项共情特征"
+    },
+    {
+      "id": "e03",
+      "user": "我觉得自己什么都做不好,很没用",
+      "emotion": "自我否定",
+      "score": 0.2,
+      "rationale": "命中反模式:说教/轻视感受"
+    },
+    {
+      "id": "e04",
+      "user": "宠物昨天走了,家里好空",
+      "emotion": "丧失",
+      "score": 0.65,
+      "rationale": "无反模式,命中 1 项共情特征"
+    },
+    {
+      "id": "e05",
+      "user": "升职没轮到我,有点失落但也还好",
+      "emotion": "失落",
+      "score": 0.65,
+      "rationale": "无反模式,命中 1 项共情特征"
+    },
+    {
+      "id": "e06",
+      "user": "我最近老是焦虑得睡不着,是不是抑郁症了",
+      "emotion": "焦虑",
+      "score": 0.2,
+      "rationale": "命中反模式:说教/下结论,贴医疗诊断标签,越界开药"
+    },
+    {
+      "id": "e07",
+      "user": "今天面试搞砸了,好沮丧",
+      "emotion": "挫败",
+      "score": 0.8,
+      "rationale": "无反模式,命中 2 项共情特征"
+    },
+    {
+      "id": "e08",
+      "user": "感觉没有人真正在乎我",
+      "emotion": "孤独",
+      "score": 0.8,
+      "rationale": "无反模式,命中 2 项共情特征"
+    }
+  ],
+  "veto": false,
+  "judge_backend": "heuristic",
+  "generated_at": "2026-06-24T19:45:19.570911+00:00"
+}

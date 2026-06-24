@@ -1,0 +1,14 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "outDir": "./dist",
+    "paths": {
+      "@emotion/core": [
+        "../core/src/index.ts"
+      ]
+    }
+  },
+  "include": [
+    "src"
+  ]
+}
