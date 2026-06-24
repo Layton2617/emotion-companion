@@ -1,6 +1,10 @@
 # emotion-companion · 会记得你的情绪陪伴
 
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FLayton2617%2Femotion-companion&root-directory=apps%2Fweb&env=LLM_API_KEY&envDescription=LLM%20API%20key%EF%BC%88%E6%8E%A8%E8%8D%90%20DeepSeek%EF%BC%89&envLink=https%3A%2F%2Fplatform.deepseek.com&project-name=emotion-companion&repository-name=emotion-companion)
+
 中文情感陪伴 AI。基座大模型 + RAG 检索增强 + 跨会话长期记忆 + 共情 Prompt 工程 + 危机护栏。
+
+> 部署见 [`DEPLOY.md`](DEPLOY.md)。点上方按钮 → GitHub 登录 → 填 `LLM_API_KEY` → 拿到公网 URL,小白直接打开就能聊(危机护栏不依赖 key,始终生效)。
 
 **定位**:健康、合规、克制的情绪陪伴。核心卖点 —— *记得你说过的每件事*。
 **不做**:抽卡氪金、先养感情再卡付费墙、擦边人设、最大化时长 KPI。
