@@ -1,6 +1,8 @@
 # emotion-companion · 会记得你的情绪陪伴
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FLayton2617%2Femotion-companion&root-directory=apps%2Fweb&env=LLM_API_KEY&envDescription=LLM%20API%20key%EF%BC%88%E6%8E%A8%E8%8D%90%20DeepSeek%EF%BC%89&envLink=https%3A%2F%2Fplatform.deepseek.com&project-name=emotion-companion&repository-name=emotion-companion)
+🌐 **在线介绍页:[layton2617.github.io/emotion-companion](https://layton2617.github.io/emotion-companion/)**
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FLayton2617%2Femotion-companion&root-directory=apps%2Fweb&env=LLM_API_KEY,LLM_BASE_URL,LLM_MODEL&envDescription=LLM%20%E9%85%8D%E7%BD%AE%EF%BC%9AOpenAI%20%E5%A1%AB%20key%20%2B%20https%3A%2F%2Fapi.openai.com%2Fv1%20%2B%20gpt-4o-mini&envLink=https%3A%2F%2Fgithub.com%2FLayton2617%2Femotion-companion%2Fblob%2Fmaster%2FDEPLOY.md&project-name=emotion-companion&repository-name=emotion-companion)
 
 中文情感陪伴 AI。基座大模型 + RAG 检索增强 + 跨会话长期记忆 + 共情 Prompt 工程 + 危机护栏。
 

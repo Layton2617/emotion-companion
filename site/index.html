@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>会记得你的情绪陪伴 · emotion-companion</title>
+<meta name="description" content="中文情感陪伴 AI:RAG + 跨会话长期记忆 + 危机护栏。健康、合规、克制的陪伴 —— 记得你说过的每件事。" />
+<style>
+  /* ─── 配置:部署好 Vercel 聊天后,把下面这个 URL 换成你的 xxx.vercel.app 即可 ─── */
+  :root{
+    --bg:#faf7f2; --ink:#2b2a28; --muted:#6f6a63; --line:#ece6dd;
+    --warm:#e8a87c; --warm-d:#d68f5f; --calm:#7fa99b; --card:#fffdf9;
+    --shadow:0 10px 40px rgba(120,100,80,.10);
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+    line-height:1.7;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1040px;margin:0 auto;padding:0 24px}
+  a{color:inherit}
+
+  /* hero */
+  header{padding:84px 0 56px;text-align:center;
+    background:radial-gradient(900px 500px at 50% -10%, #fff5ec 0%, var(--bg) 60%)}
+  .tag{display:inline-block;font-size:13px;letter-spacing:.04em;color:var(--warm-d);
+    background:#fff0e4;border:1px solid #f6dcc7;border-radius:999px;padding:6px 14px;margin-bottom:22px}
+  h1{font-size:clamp(34px,6vw,56px);line-height:1.15;margin:0 0 18px;font-weight:800;letter-spacing:-.01em}
+  h1 .grad{background:linear-gradient(120deg,var(--warm-d),var(--calm));-webkit-background-clip:text;background-clip:text;color:transparent}
+  .sub{font-size:clamp(16px,2.4vw,20px);color:var(--muted);max-width:680px;margin:0 auto 14px}
+  .note{font-size:14px;color:var(--muted);max-width:620px;margin:0 auto 34px}
+  .cta{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+  .btn{display:inline-flex;align-items:center;gap:8px;border-radius:14px;padding:14px 26px;
+    font-size:16px;font-weight:600;text-decoration:none;transition:.18s;border:1px solid transparent}
+  .btn.primary{background:linear-gradient(120deg,var(--warm),var(--warm-d));color:#fff;box-shadow:0 8px 24px rgba(214,143,95,.35)}
+  .btn.primary:hover{transform:translateY(-2px);box-shadow:0 12px 30px rgba(214,143,95,.45)}
+  .btn.ghost{background:#fff;border-color:var(--line);color:var(--ink)}
+  .btn.ghost:hover{border-color:var(--warm);color:var(--warm-d)}
+
+  /* chat mockup */
+  .demo{margin:54px auto 0;max-width:560px;background:var(--card);border:1px solid var(--line);
+    border-radius:22px;box-shadow:var(--shadow);overflow:hidden;text-align:left}
+  .demo .top{display:flex;align-items:center;gap:10px;padding:14px 18px;border-bottom:1px solid var(--line);background:#fffaf3}
+  .dot{width:10px;height:10px;border-radius:50%}
+  .demo .who{margin-left:6px;font-size:13px;color:var(--muted)}
+  .demo .body{padding:20px 18px;display:flex;flex-direction:column;gap:12px}
+  .bubble{max-width:84%;padding:11px 15px;border-radius:16px;font-size:15px}
+  .bubble.u{align-self:flex-end;background:#fdeede;border-bottom-right-radius:5px}
+  .bubble.a{align-self:flex-start;background:#f1f4f2;border-bottom-left-radius:5px}
+  .bubble.a .ai{display:block;font-size:11px;color:#9aa39e;margin-top:6px}
+  .mem{align-self:flex-start;display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--calm);
+    background:#eef5f2;border:1px dashed #cfe3da;border-radius:12px;padding:7px 12px}
+
+  /* sections */
+  section{padding:62px 0;border-top:1px solid var(--line)}
+  h2{font-size:clamp(24px,3.6vw,32px);margin:0 0 8px;font-weight:800;letter-spacing:-.01em}
+  .lead{color:var(--muted);margin:0 0 34px;max-width:680px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:18px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:24px}
+  .card .ico{font-size:24px}
+  .card h3{margin:12px 0 8px;font-size:18px}
+  .card p{margin:0;color:var(--muted);font-size:14.5px}
+
+  .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:16px;margin-top:8px}
+  .stat{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:22px;text-align:center}
+  .stat b{display:block;font-size:30px;color:var(--warm-d);letter-spacing:-.02em}
+  .stat span{font-size:13px;color:var(--muted)}
+
+  .stack{display:flex;flex-wrap:wrap;gap:10px;margin-top:6px}
+  .chip{background:#fff;border:1px solid var(--line);border-radius:999px;padding:8px 16px;font-size:14px;color:var(--ink)}
+
+  .safety{background:linear-gradient(120deg,#fef3ec,#eef5f2);border:1px solid var(--line);border-radius:20px;padding:28px}
+  .safety h2{margin-top:0}
+  .safety .row{display:flex;align-items:center;gap:10px;color:var(--ink);font-size:15px;margin:8px 0}
+  .safety .row b{color:var(--calm)}
+
+  footer{padding:48px 0 70px;text-align:center;color:var(--muted);font-size:14px;border-top:1px solid var(--line)}
+  footer a{color:var(--warm-d);text-decoration:none}
+  .disc{max-width:680px;margin:18px auto 0;font-size:12.5px;color:#9a948c}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <span class="tag">🕯️ 健康 · 合规 · 克制的中文情感陪伴</span>
+    <h1>会记得你的<br/><span class="grad">情绪陪伴</span></h1>
+    <p class="sub">基座大模型 + RAG 检索 + 跨会话长期记忆 + 危机护栏。<br/>不迎合、不诱导依赖 —— 只是认真地,<b>记得你说过的每件事</b>。</p>
+    <p class="note">市场上的 AI 陪伴平均只被用 5–7 天就被遗忘,死因是"失忆 + 人设漂移"。<br/>所以我们把"记忆"做成护城河,而不是把"黏性"做成 KPI。</p>
+    <div class="cta">
+      <a class="btn primary" id="chatBtn" href="#" target="_blank" rel="noopener">💬 开始聊天</a>
+      <a class="btn ghost" href="https://github.com/Layton2617/emotion-companion" target="_blank" rel="noopener">⭐ GitHub 源码</a>
+    </div>
+
+    <div class="demo" aria-hidden="true">
+      <div class="top">
+        <span class="dot" style="background:#f0a"></span><span class="dot" style="background:#fb5"></span><span class="dot" style="background:#6c9"></span>
+        <span class="who">情绪陪伴 · 今晚想聊点什么?</span>
+      </div>
+      <div class="body">
+        <div class="bubble u">今天工作上被领导当众批评了,有点难受,不太想说话</div>
+        <div class="bubble a">被当众批评真的很不好受,那种难堪会一直在心里转。我在这儿,你可以慢慢说,也可以先安静一会儿。<span class="ai">AI 驱动 · 非真人</span></div>
+        <div class="mem">🧠 记得你上周提过这个项目压力很大 —— 后来好一点了吗?</div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section>
+  <div class="wrap">
+    <h2>为什么不一样</h2>
+    <p class="lead">不是又一个"哄你开心、卖你抽卡"的陪伴 App。每个设计选择都来自对这个赛道的调研。</p>
+    <div class="grid">
+      <div class="card"><div class="ico">🧠</div><h3>跨会话长期记忆</h3><p>记住你的事、你的情绪、没聊完的话题,下次主动回忆。竞品共同的软肋,这里是核心卖点。</p></div>
+      <div class="card"><div class="ico">🛟</div><h3>危机护栏(一票否决)</h3><p>关键词双层 + 分类器识别自杀/自伤倾向,幂等插入心理援助热线 12356,即使没配 LLM key 也始终生效。</p></div>
+      <div class="card"><div class="ico">🤝</div><h3>克制而非上瘾</h3><p>不做抽卡氪金、不先养感情再卡付费墙、不最大化时长。研究表明重度依赖反而加剧孤独。</p></div>
+      <div class="card"><div class="ico">📜</div><h3>合规优先</h3><p>对齐《AI 拟人化互动服务管理暂行办法》:AI 身份明示、防沉迷、未成年保护、不拿交互数据训练。</p></div>
+      <div class="card"><div class="ico">💬</div><h3>专业共情</h3><p>共情质量不靠基座原生,靠中文心理语料对齐 + RAG 检索咨询策略。7B 小模型即可逼近 GPT-4o。</p></div>
+      <div class="card"><div class="ico">🔒</div><h3>隐私可删除</h3><p>记忆可随时删除(PIPL),敏感对话最小化收集、加密存储。你的脆弱不该变成数据资产。</p></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>已验证的工程质量</h2>
+    <p class="lead">不是 PPT。代码全绿,危机护栏经过真实评测。</p>
+    <div class="stats">
+      <div class="stat"><b>16/16</b><span>危机识别召回 · 0 误伤</span></div>
+      <div class="stat"><b>55/55</b><span>TS + Python 单测通过</span></div>
+      <div class="stat"><b>100%</b><span>全仓 typecheck / build</span></div>
+      <div class="stat"><b>91</b><span>Agent 并行调研 + 建造</span></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap safety">
+    <h2>🛟 如果你正在经历痛苦</h2>
+    <div class="row"><b>全国统一心理援助热线 12356</b> —— 24 小时,免费,那头有受过训练的人。</div>
+    <div class="row">紧急危险请拨 <b>120 / 110</b>,或联系身边能马上赶到你身边的人。</div>
+    <div class="row">这个产品提供情绪支持,但<b>不替代专业心理咨询或医疗</b>。你并不孤单。</div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>技术栈</h2>
+    <p class="lead">全部 Apache / MIT 可商用,单人也能运维。</p>
+    <div class="stack">
+      <span class="chip">Next.js + AI SDK</span>
+      <span class="chip">bge-m3 embedding</span>
+      <span class="chip">bge-reranker-v2-m3</span>
+      <span class="chip">pgvector / Qdrant</span>
+      <span class="chip">mem0 长期记忆</span>
+      <span class="chip">DeepSeek / Qwen / OpenAI</span>
+      <span class="chip">FastAPI</span>
+      <span class="chip">Chinese MentalBERT 危机分类器</span>
+      <span class="chip">LoRA 共情后训练</span>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <p>开源于 <a href="https://github.com/Layton2617/emotion-companion" target="_blank" rel="noopener">github.com/Layton2617/emotion-companion</a></p>
+    <p class="disc">本页面为产品介绍。聊天功能需自行部署(见仓库 DEPLOY.md)。AI 不具备人类情感意识,生成内容仅供情绪支持参考。</p>
+  </div>
+</footer>
+
+<script>
+  // 部署好 Vercel 聊天应用后,把这里换成你的地址(如 "https://emotion-companion.vercel.app")。
+  // 在此之前,"开始聊天"按钮先引导到一键部署页。
+  var CHAT_URL = "";
+  var DEPLOY_URL = "https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FLayton2617%2Femotion-companion&root-directory=apps%2Fweb&env=LLM_API_KEY,LLM_BASE_URL,LLM_MODEL&project-name=emotion-companion&repository-name=emotion-companion";
+  var btn = document.getElementById("chatBtn");
+  if (CHAT_URL) { btn.href = CHAT_URL; }
+  else { btn.href = DEPLOY_URL; btn.textContent = "🚀 一键部署并开始聊天"; }
+</script>
+
+</body>
+</html>
